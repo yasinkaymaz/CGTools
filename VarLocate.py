@@ -42,10 +42,17 @@ outfile1 = open(sys.argv[1]+"_SNV_positions.bed", "w")
 
 tmpoutfile = open(sys.argv[1]+".tmp.file.aln", "w")
 alignment = AlignIO.read(open(sys.argv[1]), "fasta")
+recordslist = []
 for record in alignment:
-	#print record.id, record.seq
+#	print record.id, record.seq
+	recordslist.append(record.id)
 	tmpoutfile.write(str(record.id)+"\t"+str(record.seq)+"\n")
 tmpoutfile.close()
+
+for id in recordslist:
+	if id != Ref:
+		Alt = id
+#print(recordslist, Alt)
 
 #with open(sys.argv[3], "r") as alnfile:
 with open(sys.argv[1]+".tmp.file.aln", "r") as alnfile:
@@ -99,8 +106,9 @@ with open(sys.argv[1]+".tmp.file.aln", "r") as alnfile:
     	#if there is a mismatch error and this position is not in repeat regions, count as sequencing error.
     	if len(nuccompos.most_common(4))>1 and Ref_pos and float(100*nuccompos.most_common(4)[1][1]/SeqCount) > 10.00:
 #    		print nuccompos.most_common(4), Ref_pos, SeqCount, 100*nuccompos.most_common(4)[0][1]/SeqCount,100*nuccompos.most_common(4)[1][1]/SeqCount
-    		MissMatchCount = MissMatchCount +1
-    		outfile1.write(str(Ref)+"\t"+str(Ref_pos)+"\t"+str(Ref_pos+1)+"\t"+str(1)+"\n")
+
+            MissMatchCount = MissMatchCount +1
+            outfile1.write(str(Ref)+"\t"+str(Ref_pos)+"\t"+str(Ref_pos+1)+"\t"+str(new_df.loc[Ref,i])+str(Ref_pos)+str(new_df.loc[Alt,i])+"\n")
 
     	#If there is a perfect match and the position is not in the repeat regions, count as match.
     	elif len(nuccompos.most_common(4)) == 1 and Ref_pos:
