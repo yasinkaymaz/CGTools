@@ -1,3 +1,3 @@
 # CGTools
 
-A collection of scripts for Comperative Genomics. Comperative Genomics Tools.
+A collection of scripts for Comparative Genomics. Comparative Genomics Tools.
