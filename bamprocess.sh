@@ -18,7 +18,7 @@ samtools sort "${InSam%.sam}".F4.bam -o "${InSam%.sam}".sorted.bam
 samtools index "${InSam%.sam}".sorted.bam
 
 #Compute the depth of coverage
-samtools depth  "${InSam%.sam}".sorted.bam |  awk '{sum+=$3} END { print "Average = ", sum/NR}'
+samtools depth  "${InSam%.sam}".sorted.bam |  awk '{sum+=$3} END { print "Average = ", sum/NR}' > "${InSam%.sam}".Coverage.stats.txt
 
 #Subsampling 5%
 samtools view -s 0.05 -b "${InSam%.sam}".sorted.bam > "${InSam%.sam}".sorted.0_05.bam

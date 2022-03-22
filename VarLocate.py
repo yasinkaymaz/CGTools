@@ -8,8 +8,8 @@ import sys
 from Bio import AlignIO
 import Bio.Align
 dir = os.path.dirname(__file__)
-print os.getcwd()
-print dir
+print(os.getcwd())
+print(dir)
 from collections import defaultdict, Counter
 #from collections import namedtuple
 import collections
@@ -22,10 +22,10 @@ alndata = []
 #sys.argv[4] ->
 
 if len(sys.argv) < 2:
-    print "Welcome to new era of MSA."
-    print "Please provide required arguments in proper order:"
-    print "VarLocate.py AlignmentFile Refname"
-    print "Feed with an alignment file in fasta format."
+    print("Welcome to new era of MSA.")
+    print("Please provide required arguments in proper order:")
+    print("VarLocate.py AlignmentFile Refname")
+    print("Feed with an alignment file in fasta format.")
     sys.exit(1)
 Ref = sys.argv[2]
 #Make sure that repeat files are in the same directory
@@ -44,7 +44,7 @@ tmpoutfile = open(sys.argv[1]+".tmp.file.aln", "w")
 alignment = AlignIO.read(open(sys.argv[1]), "fasta")
 recordslist = []
 for record in alignment:
-#    print record.id, record.seq
+#    print(record.id, record.seq)
     recordslist.append(record.id)
     tmpoutfile.write(str(record.id)+"\t"+str(record.seq)+"\n")
 tmpoutfile.close()
@@ -52,7 +52,7 @@ tmpoutfile.close()
 for id in recordslist:
     if id != Ref:
         Alt = id
-#print(recordslist, Alt)
+#print(recordslist, Alt))
 
 #with open(sys.argv[3], "r") as alnfile:
 with open(sys.argv[1]+".tmp.file.aln", "r") as alnfile:
@@ -60,17 +60,19 @@ with open(sys.argv[1]+".tmp.file.aln", "r") as alnfile:
     dfseq = []
     # take the names of sequences to index
     index = df[0]
-    str_seq1 = df.ix[1][1]
-    print "len : " +  str(len(str_seq1))
+    #str_seq1 = df.ix[1][1]
+    str_seq1 = df.iloc[1][1]
+    print("len : " +  str(len(str_seq1)))
     # create an empty list of length of sequence letters
     columns = list(range(len(str_seq1)))
     #new data frame
     new_df = pd.DataFrame(index=index, columns= columns)
-    #print new_df
+    #print(new_df)
     #create new dataframe
     for i in range(len(df)):
         # change a string of sequence to a list of sequence
-        dfseq = list(df.ix[i][1])
+        #dfseq = list(df.ix[i][1])
+        dfseq = list(df.iloc[i][1])
         # You can edit a subset of a dataframe by using loc:
         # df.loc[<row selection>, <column selection>]
         # place the list of sequence to the row that it belongs to in the new data frame
@@ -88,12 +90,12 @@ with open(sys.argv[1]+".tmp.file.aln", "r") as alnfile:
     SeqCount=len(df)
     for i in range(len(str_seq1)):
         # place the the sequence in a position to a set
-        #print collections.Counter(new_df.loc[:,i]), collections.Counter(new_df.loc[:,i]).most_common(4)
+        #print(collections.Counter(new_df.loc[:,i]), collections.Counter(new_df.loc[:,i]).most_common(4))
         nuccompos = collections.Counter(new_df.loc[:,i])
-    #    print "n_count:", nuccompos['n'], "gap_count:", nuccompos['-']
+    #    print("n_count:", nuccompos['n'], "gap_count:", nuccompos['-'])
         del nuccompos['n']
 ###        del nuccompos['-']
-        #print nuccompos.most_common(4)
+        #print(nuccompos.most_common(4))
 
         set_seq = set(new_df.loc[:,i])
 
@@ -108,15 +110,15 @@ with open(sys.argv[1]+".tmp.file.aln", "r") as alnfile:
         #skip indels and Ns in the alignment
     #    if 'n' in set_pair or '-' in set_pair:
     #        pass
-        #print new_df.loc[:,i].isin(['-'])
+        #print(new_df.loc[:,i].isin(['-']))
         if new_df.loc[:,i].isin(['-']).any() and Ref_pos:
 
-            print "A"
+            #print("A")
             if new_df.loc[Ref,i] == '-' and new_df.loc[Ref,i] == new_df.loc[Ref,i-1]:
                 Insertion_l = Insertion_l + 1
                 Insertion_start = i - Insertion_l +1
                 Inserted_seq = Inserted_seq+str(new_df.loc[Alt,i])
-                print "Insertion", Insertion_start, Insertion_l, Inserted_seq
+                print("Insertion", Insertion_start, Insertion_l, Inserted_seq)
                 SNV_s = Insertion_start
                 Ref_nuc = '-'
                 Alt_nuc = Inserted_seq
@@ -129,7 +131,7 @@ with open(sys.argv[1]+".tmp.file.aln", "r") as alnfile:
                 Deletion_l = Deletion_l + 1
                 Deletion_start = i - Deletion_l
                 Deleted_seq = Deleted_seq+str(new_df.loc[Ref,i])
-                print "Deletion", Deletion_start, Deletion_l, Deleted_seq
+                print("Deletion", Deletion_start, Deletion_l, Deleted_seq)
                 SNV_s = Deletion_start
                 Ref_nuc = Deleted_seq
                 Alt_nuc = '-'
@@ -145,14 +147,14 @@ with open(sys.argv[1]+".tmp.file.aln", "r") as alnfile:
             Deleted_seq = ''
 
         elif Inserted_seq != '' and '-' not in nuccompos.most_common(4) :
-            print "insertion write"
+            print("insertion write")
             outfile1.write(str(Ref)+"\t"+str(Insertion_start)+"\t"+str(Insertion_start+Insertion_l)+"\t"+str(Ref_nuc)+str(Ref_pos)+str(Alt_nuc)+"\n")
             Inserted_seq = ''
 
 
         #if there is a mismatch error and this position is not in repeat regions, count as sequencing error.
         if len(nuccompos.most_common(4))>1 and '-' not in nuccompos.most_common(4) and Ref_pos and float(100*nuccompos.most_common(4)[1][1]/SeqCount) > 10.00:
-#           print nuccompos.most_common(4), Ref_pos, SeqCount, 100*nuccompos.most_common(4)[0][1]/SeqCount,100*nuccompos.most_common(4)[1][1]/SeqCount
+#           print(nuccompos.most_common(4), Ref_pos, SeqCount, 100*nuccompos.most_common(4)[0][1]/SeqCount,100*nuccompos.most_common(4)[1][1]/SeqCount)
 
             SNV_s = Ref_pos
             Ref_nuc = new_df.loc[Ref,i]
@@ -171,5 +173,5 @@ with open(sys.argv[1]+".tmp.file.aln", "r") as alnfile:
 
 
 #outfile2.write(sys.argv[1]+"\t"+sys.argv[2]+"\t"+str(MissMatchCount)+"\t"+str(MatchCount)+"\t"+str(float(MissMatchCount)/(MissMatchCount+MatchCount)))
-print "Match Count:", MatchCount, Ref_pos
+print("Match Count:", MatchCount, Ref_pos)
 outfile1.close()

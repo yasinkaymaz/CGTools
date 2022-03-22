@@ -12,8 +12,8 @@ alndata = []
 #sys.argv[2] -> type of virus
 
 if len(sys.argv) < 3:
-	print "Please provide required arguments in proper order:"
-	print "MSA_parser_cleaner.py AlignmentFile (fasta format) RefName Gene_bed_file (bed3 format)"
+	print("Please provide required arguments in proper order:")
+	print("MSA_parser_cleaner.py AlignmentFile (fasta format) RefName Gene_bed_file (bed3 format)")
 	sys.exit(1)
 
 GeneBedfile = sys.argv[3]
@@ -91,7 +91,7 @@ for record in alignment:
 
 
 #print "GAP:", len(gap), "BAP:", len(bap)
-print "Target gene loci length:", len(targetGeneAlignment)
+print("Target gene loci length:", len(targetGeneAlignment))
 
 for i in range(alignment.get_alignment_length()):
 
@@ -119,8 +119,8 @@ edited = edited[:,1:]
 #>>> align.add_sequence("Gamma", "ACTGCTAGATAG")
 
 #AlignIO.write(edited, "my_TargetGeneAlignment_"+sys.argv[1], "fasta")
-AlignIO.write(edited, os.path.basename(sys.argv[3])+".aln.fasta", "fasta")
-
+#AlignIO.write(edited, os.path.basename(sys.argv[3])+".aln.fasta", "fasta")
+AlignIO.write(edited, sys.argv[3]+".aln.fasta", "fasta")
 #print len(bap)
 #print len(gap)
 #outfile1 = open(sys.argv[1]+sys.argv[2]+"_Mismatch_error_positions.bed","w")
